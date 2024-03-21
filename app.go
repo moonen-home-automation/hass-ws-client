@@ -99,10 +99,10 @@ func (a *App) Cleanup() {
 	}
 }
 
-func (a *App) registerEventListener(listener EventListener) {
-	if !slices.Contains(a.eventListenerTypes, listener.eventType) {
-		ws.SubscribeToEventType(listener.eventType, a.wsWriter, a.ctx)
-		a.eventListenerTypes = append(a.eventListenerTypes, listener.eventType)
+func (a *App) RegisterEventListener(listener EventListener) {
+	if !slices.Contains(a.eventListenerTypes, listener.EventType) {
+		ws.SubscribeToEventType(listener.EventType, a.wsWriter, a.ctx)
+		a.eventListenerTypes = append(a.eventListenerTypes, listener.EventType)
 	}
 }
 
@@ -117,7 +117,7 @@ func (a *App) ListenForEvents(listener EventListener, eventChan chan EventData) 
 		}
 		baseEventMsg := BaseEventMsg{}
 		_ = json.Unmarshal(msg.Raw, &baseEventMsg)
-		if baseEventMsg.Event.EventType != listener.eventType {
+		if baseEventMsg.Event.EventType != listener.EventType {
 			return
 		}
 		eventData := EventData{
