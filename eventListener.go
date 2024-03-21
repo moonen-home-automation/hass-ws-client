@@ -1,7 +1,7 @@
 package hasswsclient
 
 type EventListener struct {
-	eventType string
+	EventType string
 }
 
 type EventListenerCallback func(EventData)
