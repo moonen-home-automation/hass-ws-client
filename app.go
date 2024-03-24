@@ -121,7 +121,7 @@ func (a *App) ListenForEvents(listener EventListener, eventChan chan EventData) 
 		baseEventMsg := BaseEventMsg{}
 		_ = json.Unmarshal(msg.Raw, &baseEventMsg)
 		if baseEventMsg.Event.EventType != listener.EventType {
-			return
+			continue
 		}
 		eventData := EventData{
 			Type:         baseEventMsg.Event.EventType,
