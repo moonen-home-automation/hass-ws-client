@@ -29,7 +29,7 @@ func ListenWebsocket(conn *websocket.Conn, ctx context.Context, c chan ChanMsg) 
 			close(c)
 			break
 		}
-		fmt.Sprintln("Received websocket message")
+		fmt.Println("Received websocket message")
 
 		base := BaseMessage{
 			// Default to true for messages that do not contain the 'success' field

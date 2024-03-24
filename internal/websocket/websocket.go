@@ -147,5 +147,5 @@ func SubscribeToEventType(eventType string, conn *WebSocketWriter, ctx context.C
 		slog.Error(wrapperErr.Error())
 		panic(wrapperErr)
 	}
-	fmt.Sprintln("Subscribed to new event")
+	fmt.Println("Subscribed to new event")
 }
