@@ -23,6 +23,7 @@ type ChanMsg struct {
 
 func ListenWebsocket(conn *websocket.Conn, ctx context.Context, c chan ChanMsg) {
 	for {
+		fmt.Println("Waiting for ws message")
 		bytes, err := ReadMessage(conn, ctx)
 		if err != nil {
 			slog.Error("Error reading from websocket:", err)
@@ -44,8 +45,6 @@ func ListenWebsocket(conn *websocket.Conn, ctx context.Context, c chan ChanMsg) 
 			Success: base.Success,
 			Raw:     bytes,
 		}
-
-		fmt.Printf("Websocket message received %s \n", chanMsg)
 
 		c <- chanMsg
 	}
