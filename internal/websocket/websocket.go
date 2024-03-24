@@ -43,7 +43,6 @@ func ReadMessage(conn *websocket.Conn, ctx context.Context) ([]byte, error) {
 	if err != nil {
 		return []byte{}, err
 	}
-	fmt.Printf("Received ws message %s \n", msg)
 	return msg, nil
 }
 
@@ -148,5 +147,4 @@ func SubscribeToEventType(eventType string, conn *WebSocketWriter, ctx context.C
 		slog.Error(wrapperErr.Error())
 		panic(wrapperErr)
 	}
-	fmt.Println("Subscribed to new event")
 }
