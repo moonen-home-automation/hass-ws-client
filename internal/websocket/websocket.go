@@ -43,6 +43,7 @@ func ReadMessage(conn *websocket.Conn, ctx context.Context) ([]byte, error) {
 	if err != nil {
 		return []byte{}, err
 	}
+	fmt.Printf("Received ws message %s \n", msg)
 	return msg, nil
 }
 
