@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/gorilla/websocket"
 	ws "github.com/moonen-home-automation/hass-ws-client/internal/websocket"
 	"log/slog"
@@ -103,6 +104,7 @@ func (a *App) RegisterEventListener(listener EventListener) {
 	if !slices.Contains(a.eventListenerTypes, listener.EventType) {
 		ws.SubscribeToEventType(listener.EventType, a.wsWriter, a.ctx)
 		a.eventListenerTypes = append(a.eventListenerTypes, listener.EventType)
+		fmt.Sprintln("Registered new event listener")
 	}
 }
 
@@ -115,6 +117,7 @@ func (a *App) ListenForEvents(listener EventListener, eventChan chan EventData) 
 		if !ok {
 			break
 		}
+		fmt.Sprintln("Event listener channel received")
 		baseEventMsg := BaseEventMsg{}
 		_ = json.Unmarshal(msg.Raw, &baseEventMsg)
 		if baseEventMsg.Event.EventType != listener.EventType {
