@@ -52,7 +52,9 @@ func (s *ServiceCaller) Call(service ServiceCall) (ServiceResponse, error) {
 
 func listenForServiceResponse(conn *websocket.Conn, ctx context.Context, id int64) *ServiceResponse {
 	elChan := make(chan ws.ChanMsg, 25)
-	go ws.ListenWebsocket(conn, ctx, elChan)
+
+	cancelCtx, cancel := context.WithCancel(ctx)
+	go ws.ListenWebsocket(conn, cancelCtx, elChan)
 
 	var serviceResponse *ServiceResponse
 
@@ -76,6 +78,8 @@ func listenForServiceResponse(conn *websocket.Conn, ctx context.Context, id int6
 		serviceResponse = &srvResp
 		break
 	}
+
+	cancel()
 
 	return serviceResponse
 }
