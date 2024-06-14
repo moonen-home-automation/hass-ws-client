@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/gorilla/websocket"
+	"github.com/moonen-home-automation/hass-ws-client/internal/services"
 	ws "github.com/moonen-home-automation/hass-ws-client/internal/websocket"
 	"log/slog"
 	"slices"
@@ -27,7 +28,7 @@ type App struct {
 
 	wsWriter *ws.WebSocketWriter
 
-	service *Service
+	ServiceCaller services.ServiceCaller
 
 	eventListenerTypes []string
 }
@@ -76,14 +77,15 @@ func InitializeAppInstance(request InitializeAppRequest) (*App, error) {
 	}
 
 	wsWriter := &ws.WebSocketWriter{Conn: conn}
-	service := newService(wsWriter, ctx)
+
+	serviceCaller := services.ServiceCaller{Conn: wsWriter, Ctx: ctx}
 
 	appInstance = &App{
-		conn:      conn,
-		wsWriter:  wsWriter,
-		ctx:       ctx,
-		ctxCancel: ctxCancel,
-		service:   service,
+		conn:          conn,
+		wsWriter:      wsWriter,
+		ctx:           ctx,
+		ctxCancel:     ctxCancel,
+		ServiceCaller: serviceCaller,
 	}
 
 	return appInstance, nil
@@ -115,6 +117,11 @@ func (a *App) ListenForEvents(listener EventListener, eventChan chan EventData) 
 		if !ok {
 			break
 		}
+
+		if msg.Type != "event" {
+			continue
+		}
+
 		baseEventMsg := BaseEventMsg{}
 		_ = json.Unmarshal(msg.Raw, &baseEventMsg)
 		if baseEventMsg.Event.EventType != listener.EventType {
