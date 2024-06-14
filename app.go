@@ -104,7 +104,7 @@ func (a *App) RegisterEventListener(listener EventListener) {
 }
 
 func (a *App) ListenForEvents(listener EventListener, eventChan chan EventData) {
-	elChan := make(chan ws.ChanMsg)
+	elChan := make(chan ws.ChanMsg, 25)
 	go ws.ListenWebsocket(a.conn, a.ctx, elChan)
 
 	for {
