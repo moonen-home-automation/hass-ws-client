@@ -44,7 +44,6 @@ func (s *ServiceCaller) Call(service ServiceCall) (ServiceResponse, error) {
 		return ServiceResponse{}, err
 	}
 	if service.Returns == true {
-		fmt.Println("Waiting for response")
 		resp := listenForServiceResponse(s.Conn.Conn, s.Ctx, service.Id)
 		return *resp, nil
 	}
@@ -63,23 +62,18 @@ func listenForServiceResponse(conn *websocket.Conn, ctx context.Context, id int6
 			break
 		}
 
-		fmt.Println("message received")
-
 		if msg.Type != "result" {
 			continue
 		}
-		fmt.Println("type match")
 
 		if msg.Id != id {
 			continue
 		}
-		fmt.Println("id match")
 
 		srvResp := ServiceResponse{}
 		fmt.Println(string(msg.Raw))
 		_ = json.Unmarshal(msg.Raw, &srvResp)
 		serviceResponse = &srvResp
-		fmt.Println("response set")
 		break
 	}
 
