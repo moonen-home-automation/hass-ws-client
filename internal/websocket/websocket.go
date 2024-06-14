@@ -46,13 +46,11 @@ func ReadMessage(conn *websocket.Conn, ctx context.Context) ([]byte, error) {
 	return msg, nil
 }
 
-func SetupConnection(ip, port, authToken string) (*websocket.Conn, context.Context, context.CancelFunc, error) {
-	uri := fmt.Sprintf("ws://%s:%s/api/websocket", ip, port)
+func SetupConnection(uri, authToken string) (*websocket.Conn, context.Context, context.CancelFunc, error) {
 	return ConnectionFromUri(uri, authToken)
 }
 
-func SetupSecureConnection(ip, port, authToken string) (*websocket.Conn, context.Context, context.CancelFunc, error) {
-	uri := fmt.Sprintf("wss://%s:%s/api/websocket", ip, port)
+func SetupSecureConnection(uri, authToken string) (*websocket.Conn, context.Context, context.CancelFunc, error) {
 	return ConnectionFromUri(uri, authToken)
 }
 

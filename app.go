@@ -43,20 +43,15 @@ type timeRange struct {
 }
 
 type InitializeAppRequest struct {
-	IpAddress   string
-	Port        string
+	URL         string
 	HAAuthToken string
 	Secure      bool
 }
 
 func InitializeAppInstance(request InitializeAppRequest) (*App, error) {
-	if request.IpAddress == "" || request.HAAuthToken == "" {
-		slog.Error("IpAddress and HAAuthToken are required arguments for InitializeAppRequest")
+	if request.URL == "" || request.HAAuthToken == "" {
+		slog.Error("URL and HAAuthToken are required arguments for InitializeAppRequest")
 		return nil, ErrInvalidArgs
-	}
-	port := request.Port
-	if port == "" {
-		port = "8123"
 	}
 
 	var (
@@ -67,9 +62,9 @@ func InitializeAppInstance(request InitializeAppRequest) (*App, error) {
 	)
 
 	if request.Secure {
-		conn, ctx, ctxCancel, err = ws.SetupSecureConnection(request.IpAddress, port, request.HAAuthToken)
+		conn, ctx, ctxCancel, err = ws.SetupSecureConnection(request.URL, request.HAAuthToken)
 	} else {
-		conn, ctx, ctxCancel, err = ws.SetupConnection(request.IpAddress, port, request.HAAuthToken)
+		conn, ctx, ctxCancel, err = ws.SetupConnection(request.URL, request.HAAuthToken)
 	}
 
 	if conn == nil {
